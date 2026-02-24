@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Birthday!</title>
+<style>
+  body {
+    margin: 0;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    background: linear-gradient(to right, #ff9a9e, #fad0c4, #a1c4fd);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    flex-direction: column;
+    text-align: center;
+    padding: 20px;
+  }
+
+  h1 {
+    font-size: 3rem;
+    color: #fff;
+    animation: bounce 1.5s infinite alternate, glow 1.5s infinite alternate;
+    z-index: 10;
+    margin: 0;
+  }
+
+  @keyframes bounce {
+    0% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+    100% { transform: translateY(0); }
+  }
+
+  @keyframes glow {
+    0% { text-shadow: 0 0 5px #fff, 0 0 10px #ff0, 0 0 20px #f0f, 0 0 40px #f0f; }
+    100% { text-shadow: 0 0 20px #fff, 0 0 30px #ff0, 0 0 50px #f0f, 0 0 80px #f0f; }
+  }
+
+  p.message {
+    font-size: 1.3rem;
+    color: #fff;
+    margin-top: 20px;
+    max-width: 90%;
+    line-height: 1.6;
+    animation: fadeIn 4s ease forwards;
+    opacity: 0;
+    text-shadow: 1px 1px 5px #ffb6c1, 0 0 10px #ff69b4;
+  }
+
+  @keyframes fadeIn {
+    0% { opacity: 0; transform: translateY(20px); }
+    100% { opacity: 1; transform: translateY(0); }
+  }
+
+  .balloon {
+    position: absolute;
+    bottom: -100px;
+    width: 50px;
+    height: 70px;
+    border-radius: 50% 50% 50% 50%;
+    cursor: pointer;
+    animation: floatUp linear infinite;
+  }
+
+  .balloon::after {
+    content: '';
+    position: absolute;
+    width: 2px;
+    height: 40px;
+    background: #333;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  @keyframes floatUp {
+    0% { transform: translateY(0) rotate(0deg); }
+    50% { transform: translateY(-200px) rotate(15deg); }
+    100% { transform: translateY(-100vh) rotate(-15deg); }
+  }
+
+  .confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #fcd34d;
+    opacity: 0.8;
+    top: 0;
+    animation: fall linear infinite;
+  }
+
+  @keyframes fall {
+    0% { transform: translateY(-10px) rotate(0deg); }
+    100% { transform: translateY(100vh) rotate(360deg); }
+  }
+
+  .sparkle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: #fff;
+    border-radius: 50%;
+    animation: sparkle 1.2s infinite alternate;
+  }
+
+  @keyframes sparkle {
+    0% { opacity: 0; transform: scale(0.5); }
+    50% { opacity: 1; transform: scale(1.2); }
+    100% { opacity: 0; transform: scale(0.5); }
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 0;
+  }
+
+  .cake {
+    position: absolute;
+    bottom: 20px;
+    width: 100px;
+    height: 80px;
+    background: #ff9999;
+    border-radius: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 5;
+  }
+
+  .candle {
+    width: 10px;
+    height: 30px;
+    background: yellow;
+    position: absolute;
+    top: -30px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 2px;
+    animation: flicker 0.3s infinite alternate;
+  }
+
+  @keyframes flicker {
+    0% { opacity: 0.5; transform: translateX(-50%) scaleY(1); }
+    50% { opacity: 1; transform: translateX(-50%) scaleY(1.2); }
+    100% { opacity: 0.5; transform: translateX(-50%) scaleY(1); }
+  }
+</style>
+</head>
+<body>
+
+<h1>🎉 Happy Birthday! 🎉</h1>
+<p class="message">
+To my beloved Tanishaa, my sweet Motte, on this special day,<br>
+I wish for your heart to be as light as the morning sun,<br>
+your laughter to echo like the sweetest melody,<br>
+and your soul to always dance in the warmth of love.<br>
+Every moment with you is a treasure I hold dear,<br>
+may this year shower you with dreams fulfilled,<br>
+with love deeper than the ocean and happiness brighter than the stars.<br>
+Love you very much 💖
+</p>
+
+<div class="cake">
+  <div class="candle"></div>
+</div>
+
+<audio autoplay loop>
+  <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg">
+</audio>
+
+<canvas id="fireworks"></canvas>
+
+<script>
+const colors = ['#ff4d4d','#ff944d','#ffff4d','#4dff4d','#4dffff','#4d4dff','#ff4dff'];
+
+// Balloons
+for(let i=0;i<10;i++){
+  let balloon = document.createElement('div');
+  balloon.className = 'balloon';
+  balloon.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+  balloon.style.left = Math.random()*100 + 'vw';
+  balloon.style.animationDuration = (5 + Math.random()*5) + 's';
+  document.body.appendChild(balloon);
+  balloon.addEventListener('click', () => balloon.remove());
+}
+
+// Confetti
+for(let i=0;i<50;i++){
+  let confetti = document.createElement('div');
+  confetti.className = 'confetti';
+  confetti.style.backgroundColor = colors[Math.floor(Math.random()*colors.length)];
+  confetti.style.left = Math.random()*100 + 'vw';
+  confetti.style.animationDuration = (3 + Math.random()*5) + 's';
+  confetti.style.width = 5 + Math.random()*10 + 'px';
+  confetti.style.height = 5 + Math.random()*10 + 'px';
+  document.body.appendChild(confetti);
+}
+
+// Sparkles
+for(let i=0;i<30;i++){
+  let sparkle = document.createElement('div');
+  sparkle.className = 'sparkle';
+  sparkle.style.left = Math.random()*100 + 'vw';
+  sparkle.style.top = Math.random()*100 + 'vh';
+  sparkle.style.animationDuration = (0.5 + Math.random()) + 's';
+  document.body.appendChild(sparkle);
+}
+
+// Fireworks
+const canvas = document.getElementById('fireworks');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const ctx = canvas.getContext('2d');
+
+const fireworks = [];
+function Firework(x, y) {
+  this.x = x;
+  this.y = y;
+  this.particles = [];
+  for(let i=0;i<30;i++){
+    this.particles.push({
+      x: x,
+      y: y,
+      dx: (Math.random()-0.5)*5,
+      dy: (Math.random()-0.5)*5,
+      color: colors[Math.floor(Math.random()*colors.length)],
+      alpha: 1
+    });
+  }
+}
+
+Firework.prototype.update = function() {
+  this.particles.forEach(p => {
+    p.x += p.dx;
+    p.y += p.dy;
+    p.alpha -= 0.02;
+  });
+  this.particles = this.particles.filter(p => p.alpha>0);
+}
+
+Firework.prototype.draw = function(ctx) {
+  this.particles.forEach(p => {
+    ctx.fillStyle = p.color;
+    ctx.globalAlpha = p.alpha;
+    ctx.beginPath();
+    ctx.arc(p.x, p.y, 3, 0, Math.PI*2);
+    ctx.fill();
+  });
+  ctx.globalAlpha = 1;
+}
+
+function animate() {
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if(Math.random()<0.02){
+    fireworks.push(new Firework(Math.random()*canvas.width, Math.random()*canvas.height/2));
+  }
+  fireworks.forEach(fw => {
+    fw.update();
+    fw.draw(ctx);
+  });
+  requestAnimationFrame(animate);
+}
+
+animate();
+
+window.addEventListener('resize', () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+});
+</script>
+</body>
+</html>
